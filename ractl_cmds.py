@@ -83,5 +83,5 @@ def list_devices():
     return device_list
 
 
-def new_file_avalible_name():
+def new_file_available_name():
     return "new_file." + str(gmtime()) + ".hda"
