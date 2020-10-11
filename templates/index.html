@@ -44,4 +44,20 @@ Files:
     {% endfor %}
 </ul>
 
+    <h2>Raspberry Pi Operations</h2>
+    <table style="border: none">
+            <tr style="border: none">
+                <td style="border: none; vertical-align:top;">
+                <form action="/pi/reboot" method="post">
+                    <input type="submit" value="Reboot Raspberry Pi" />
+                </form>
+            </td>
+            <td style="border: none; vertical-align:top;">
+                <form action="/pi/shutdown" method="post">
+                    <input type="submit" value="Shut Down Raspberry Pi" />
+                </form>
+            </td>
+        </tr>
+    </table>
+
 {% endblock %}

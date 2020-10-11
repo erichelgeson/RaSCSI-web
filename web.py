@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, url_for, redirect
 
-from ractl_cmds import attach_image, list_devices, is_active, list_files, detach_by_id
+from ractl_cmds import attach_image, list_devices, is_active, list_files, detach_by_id, reboot_pi, shutdown_pi
 
 app = Flask(__name__)
 
@@ -52,6 +52,20 @@ def detach():
         flash(process.stdout, 'stdout')
         flash(process.stderr, 'stderr')
         return redirect(url_for('index'))
+
+
+@app.route('/pi/restart', methods=['POST'])
+def restart():
+    reboot_pi()
+    flash("Restarting...")
+    return redirect(url_for('index'))
+
+@app.route('/pi/shutdown', methods=['POST'])
+def shutdown():
+    shutdown_pi()
+    flash("Shutting down...")
+    return redirect(url_for('index'))
+
 
 
 if __name__ == "__main__":
