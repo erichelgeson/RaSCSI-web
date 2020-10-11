@@ -28,7 +28,7 @@ Files:
         <li>
             <form action="/scsi/attach" method="post">
                 <input type="hidden" name="file_name" value="{{file[0]}}">
-                <select name="scsi_id" id="cars">
+                <select name="scsi_id">
                     <option value="0">0</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -43,6 +43,28 @@ Files:
         </li>
     {% endfor %}
 </ul>
+
+    <h2>Download to CD</h2>
+    <table style="border: none">
+            <tr style="border: none">
+                <td style="border: none; vertical-align:top;">
+                <form action="/files/download" method="post">
+                    <select name="scsi_id">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                    </select>
+                    <input type="text" name="url" />
+                    <input type="submit" value="Download and Mount ISO" />
+                </form>
+            </td>
+        </tr>
+    </table>
 
     <h2>Raspberry Pi Operations</h2>
     <table style="border: none">

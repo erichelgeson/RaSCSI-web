@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, flash, url_for, redirect
 
-from ractl_cmds import attach_image, list_devices, is_active, list_files, detach_by_id, reboot_pi, shutdown_pi
+from ractl_cmds import attach_image, list_devices, is_active, list_files, detach_by_id, reboot_pi, shutdown_pi, \
+    download_file_to_iso
 
 app = Flask(__name__)
 
@@ -60,12 +61,27 @@ def restart():
     flash("Restarting...")
     return redirect(url_for('index'))
 
+
 @app.route('/pi/shutdown', methods=['POST'])
 def shutdown():
     shutdown_pi()
     flash("Shutting down...")
     return redirect(url_for('index'))
 
+
+@app.route('/files/download', methods=['POST'])
+def download_file():
+    scsi_id = request.form.get('scsi_id')
+    url = request.form.get('url')
+    process = download_file_to_iso(scsi_id, url)
+    if process.returncode == 0:
+        flash("File Downloaded")
+        return redirect(url_for('index'))
+    else:
+        flash(u"Failed to download file", 'error')
+        flash(process.stdout, 'stdout')
+        flash(process.stderr, 'stderr')
+        return redirect(url_for('index'))
 
 
 if __name__ == "__main__":

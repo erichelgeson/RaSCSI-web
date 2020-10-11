@@ -2,7 +2,7 @@
 set -e
 
 # verify packages installed
-# python3-venv, iso utility, etc
+# python3-venv, genisoimage, etc
 
 if ! test -e venv; then
   echo "Creating python venv for web server"

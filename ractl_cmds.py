@@ -3,7 +3,7 @@ import os
 import subprocess
 from os import listdir
 from os.path import isfile, join, getsize
-from time import gmtime
+import time
 import re
 
 base_dir = "/home/pi/images"  # Default
@@ -98,4 +98,20 @@ def list_devices():
 
 
 def new_file_available_name():
-    return "new_file." + str(gmtime()) + ".hda"
+    return "new_file." + str(int(time.time())) + ".hda"
+
+
+def download_file_to_iso(scsi_id, url):
+    import urllib.request
+    file_name = url.split('/')[-1]
+    tmp_ts = int(time.time())
+    tmp_dir = "/tmp/" + str(tmp_ts)
+    os.mkdir(tmp_dir)
+    tmp_full_path = tmp_dir + "/" + file_name
+    iso_filename = base_dir + "/" + file_name + ".iso"
+
+    urllib.request.urlretrieve(url, tmp_full_path)
+    iso_proc = subprocess.run(["genisoimage", "-hfs", "-o", iso_filename, tmp_full_path], capture_output=True)
+    if iso_proc.returncode != 0:
+        return iso_proc
+    return attach_image(scsi_id, iso_filename, "cd")
