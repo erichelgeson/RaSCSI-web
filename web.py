@@ -1,7 +1,10 @@
+import os
+
 from flask import Flask, render_template, request, flash, url_for, redirect
+from werkzeug.utils import secure_filename
 
 from ractl_cmds import attach_image, list_devices, is_active, list_files, detach_by_id, reboot_pi, shutdown_pi, \
-    download_file_to_iso
+    download_file_to_iso, base_dir
 
 app = Flask(__name__)
 
@@ -84,9 +87,25 @@ def download_file():
         return redirect(url_for('index'))
 
 
+@app.route('/files/upload', methods=['POST'])
+def upload_file():
+    print("upload file")
+    if 'file' not in request.files:
+        flash('No file part', 'error')
+        return redirect(url_for('index'))
+    file = request.files['file']
+    if file:
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return redirect(url_for('index', filename=filename))
+
+
 if __name__ == "__main__":
     app.secret_key = 'rascsi_is_awesome_insecure_secret_key'
     app.config['SESSION_TYPE'] = 'filesystem'
+    app.config['UPLOAD_FOLDER'] = base_dir
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 1024 # 1gb
 
     from waitress import serve
     serve(app, host="0.0.0.0", port=8080)
