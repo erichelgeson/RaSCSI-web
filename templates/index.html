@@ -11,7 +11,11 @@ Devices:
 <ul>
     {% for device in devices %}
         <li>{{device.id}}, {{device.un}}, {{device.type}}, {{device.file}}</li>
-        <li><form action="/detach/{{device.id}}">detach</form></li>
+        <li>
+            <form action="/detach/{{device.id}}">
+                <input type="submit" value="Detach" />
+            </form>
+        </li>
     {% endfor %}
 </ul>
 <br/>

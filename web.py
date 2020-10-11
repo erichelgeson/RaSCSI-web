@@ -31,7 +31,7 @@ def attach(scsi_id):
         return redirect(url_for('index'))
 
 
-@app.route('/attach/<scsi_id>', methods=['POST'])
+@app.route('/detach/<scsi_id>', methods=['POST'])
 def detach(scsi_id):
     process = detach_by_id(scsi_id)
     if process.returncode == 0:
