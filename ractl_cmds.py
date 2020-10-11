@@ -82,7 +82,7 @@ def list_devices():
         # Valid line to process, continue
         if not line.startswith("+") and \
                 not line.startswith("| ID |") and \
-                not line.startswith("No device is installed.") \
+                (not line.startswith("No device is installed.") or line.startswith("No images currently attached.")) \
                 and len(line) > 0:
             line.rstrip()
             device = {}
