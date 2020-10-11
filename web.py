@@ -11,6 +11,7 @@ def hello_world():
                            devices=list_devices(),
                            active=is_active())
 
+
 @app.route('/attach/<scsi_id>', methods=['POST'])
 def attach(scsi_id):
     image_location = request.args.get('image')

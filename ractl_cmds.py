@@ -67,10 +67,10 @@ def shutdown_pi():
 
 def list_devices():
     device_list = []
-    output = subprocess.run(["rasctl", "-l"], capture_output=True).stdout
-    for line in iter(output.readline, ''):
+    output = subprocess.run(["rasctl", "-l"], capture_output=True).stdout.decode("utf-8")
+    for line in output.splitlines():
         # Valid line to process, continue
-        if not line.startsWith("+") and not line.startsWith("| ID |"):
+        if not line.startswith("+") and not line.startswith("| ID |") and len(line) > 0:
             line.rstrip()
             device = {}
             segments = line.split("|")

@@ -1,4 +1,17 @@
 {% extends "base.html" %}
 
-Active {{ active }}
-Devices {{ devices }}
+{% block content %}
+{% if active %}
+    Service Running
+{% else %}
+    Service Stopped
+{% endif %}
+<br/>
+Devices:
+<ul>
+{% for d in devices %}
+    <li>{{d.id}}, {{d.un}}, {{d.type}}, {{d.file}}</li>
+{% endfor %}
+</ul>
+
+{% endblock %}
