@@ -25,9 +25,21 @@ if ! test -e venv; then
   source venv/bin/activate
   echo "Installing requirements.txt"
   pip install -r requirements.txt
+  git rev-parse HEAD > current
 fi
 
 source venv/bin/activate
+
+# Detect if someone updates - we need to re-run pip install.
+if ! test -e current; then
+  git rev-parse > current
+else
+  if [ "$(cat current)" != "$(git rev-parse HEAD)" ]; then
+      echo "New version detected, updating requirements.txt"
+      pip install -r requirements.txt
+      git rev-parse HEAD > current
+  fi
+fi
 
 echo "Starting web server..."
 python3 web.py
