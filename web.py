@@ -9,7 +9,8 @@ app = Flask(__name__)
 def hello_world():
     return render_template('index.html',
                            devices=list_devices(),
-                           active=is_active())
+                           active=is_active(),
+                           files=list_files())
 
 
 @app.route('/attach/<scsi_id>', methods=['POST'])

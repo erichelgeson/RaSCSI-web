@@ -9,9 +9,17 @@
 <br/>
 Devices:
 <ul>
-{% for d in devices %}
-    <li>{{d.id}}, {{d.un}}, {{d.type}}, {{d.file}}</li>
-{% endfor %}
+    {% for device in devices %}
+        <li>{{device.id}}, {{device.un}}, {{device.type}}, {{device.file}}</li>
+        <li><form action="/detach/{{device.id}}">detach</form></li>
+    {% endfor %}
+</ul>
+<br/>
+Files:
+<ul>
+    {% for file in files %}
+        <li>{{file[0]}} - {{file[1]}}</li>
+    {% endfor %}
 </ul>
 
 {% endblock %}

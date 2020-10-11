@@ -1,7 +1,7 @@
 import os
 import subprocess
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, getsize
 from time import gmtime
 
 base_dir = "/home/pi/images"  # Default
@@ -12,7 +12,14 @@ def is_active():
 
 
 def list_files():
-    return [f for f in listdir(base_dir) if isfile(join(base_dir, f))]
+    files_list = []
+    for path, dirs, files in os.walk(base_dir):
+        files_list.extend([
+            (os.path.join(path, file),
+             # TODO: move formatting to template
+             '{:,.0f}'.format(os.path.getsize(os.path.join(path, file)) / float(1 << 20)) + " MB")
+            for file in files])
+    return files_list
 
 
 def attach_image(image, scsi_id, type):
@@ -40,7 +47,8 @@ def insert(scsi_id, file_name):
 
 
 def create_new_image(file_name, size):
-    return subprocess.run(["dd", "if=/dev/zero", "of=" + base_dir + file_name, "bs=1M", "count=" + size], capture_output=True)
+    return subprocess.run(["dd", "if=/dev/zero", "of=" + base_dir + file_name, "bs=1M", "count=" + size],
+                          capture_output=True)
 
 
 def delete_image(file_name):
@@ -78,7 +86,6 @@ def list_devices():
             device['un'] = segments[2].strip()
             device['type'] = segments[3].strip()
             device['file'] = segments[4].strip()
-            print(device)
             device_list.append(device)
     return device_list
 
