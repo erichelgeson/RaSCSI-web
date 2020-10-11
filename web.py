@@ -7,6 +7,7 @@ from ractl_cmds import attach_image, list_devices, is_active, list_files, detach
     download_file_to_iso, base_dir
 
 app = Flask(__name__)
+MAX_FILE_SIZE = 1024 * 1024 * 1024 # 1gb
 
 
 @app.route('/')
@@ -14,7 +15,9 @@ def index():
     return render_template('index.html',
                            devices=list_devices(),
                            active=is_active(),
-                           files=list_files())
+                           files=list_files(),
+                           base_dir=base_dir,
+                           max_file_size=MAX_FILE_SIZE)
 
 
 @app.route('/scsi/attach', methods=['POST'])
@@ -89,7 +92,6 @@ def download_file():
 
 @app.route('/files/upload', methods=['POST'])
 def upload_file():
-    print("upload file")
     if 'file' not in request.files:
         flash('No file part', 'error')
         return redirect(url_for('index'))
@@ -100,12 +102,17 @@ def upload_file():
         return redirect(url_for('index', filename=filename))
 
 
+@app.route('/files/create', methods=['POST'])
+def create_file():
+    print("TODO")
+
+
 if __name__ == "__main__":
     app.secret_key = 'rascsi_is_awesome_insecure_secret_key'
     app.config['SESSION_TYPE'] = 'filesystem'
     app.config['UPLOAD_FOLDER'] = base_dir
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 1024 # 1gb
+    app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
 
     from waitress import serve
     serve(app, host="0.0.0.0", port=8080)

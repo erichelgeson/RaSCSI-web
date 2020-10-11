@@ -1,50 +1,85 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block header %}
 {% if active %}
-    Service Running
+<span style="color: white; background-color: green; text-align: center; vertical-align: center; font-family: Arial, Helvetica, sans-serif;">Service Running</span>
 {% else %}
-    Service Stopped
+<span style="color: white; background-color: red; text-align: center; vertical-align: center; font-family: Arial, Helvetica, sans-serif;">Service Stopped</span>
 {% endif %}
-<pre>{{active}}</pre>
-<br/>
-Devices:
-<ul>
-    {% for device in devices %}
-        <li>{{device.id}}, {{device.un}}, {{device.type}}, {{device.file}}</li>
-        <li>
-            <form action="/scsi/detach" method="post">
-                <input type="hidden" name="scsi_id" value="{{device.id}}">
-                <input type="submit" value="Detach" />
-            </form>
-        </li>
-    {% endfor %}
-</ul>
-<br/>
-Files:
-<ul>
-    {% for file in files %}
-        <li>{{file[0]}} - {{file[1]}}</li>
-        <li>
-            <form action="/scsi/attach" method="post">
-                <input type="hidden" name="file_name" value="{{file[0]}}">
-                <select name="scsi_id">
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                </select>
-                <input type="submit" value="Attach" />
-            </form>
-        </li>
-    {% endfor %}
-</ul>
+    <table width="100%">
+        <tbody>
+        <tr style="background-color: black;">
+            <td style="background-color: black;">
+                <a href="http://github.com/akuker/RASCSI">
+                    <h1>RaSCSI - 68kmla Edition</h1>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    {% endblock %}
+
+    {% block content %}
+    <h2>Current RaSCSI Configuration</h2>
+    <table cellpadding="3" border="black">
+        <tbody>
+        <tr>
+            <td><b>SCSI ID</b></td>
+            <td><b>Type</b></td>
+            <td><b>File</b></td>
+            <td><b>Device Ops</b></td>
+        </tr>
+        {% for device in devices %}
+        <tr>
+            <td style="text-align:center">{{device.id}}</td>
+            <td style="text-align:center">{{device.type}}</td>
+            <td>{{device.file}}</td>
+            <td>
+                <form action="/scsi/detach" method="post">
+                    <input type="hidden" name="scsi_id" value="{{device.id}}">
+                    <input type="submit" value="Detach" />
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Image File Management</h2>
+    <table cellpadding="3" border="black">
+        <tbody>
+        <tr>
+            <td><b>File</b></td>
+            <td><b>Size</b></td>
+            <td><b>Actions</b></td>
+        </tr>
+        {% for file in files %}
+        <tr>
+            <td style="text-align:center">{{file[0].split("/")[-1]}}</td>
+            <td style="text-align:center">{{file[1]}}</td>
+            <td>
+                <form action="/scsi/attach" method="post">
+                    <input type="hidden" name="file_name" value="{{file[0]}}">
+                    <select name="scsi_id">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                    </select>
+                    <input type="submit" value="Attach" />
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
     <h2>Download to CD</h2>
+    <p>Download a file, create a HFS iso, and mount it on the device id given</p>
     <table style="border: none">
             <tr style="border: none">
                 <td style="border: none; vertical-align:top;">
@@ -67,6 +102,7 @@ Files:
     </table>
 
     <h2>Upload File</h2>
+    <p>Uploads file to {{base_dir}}</p>
     <table style="border: none">
             <tr style="border: none">
                 <td style="border: none; vertical-align:top;">

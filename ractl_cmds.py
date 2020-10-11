@@ -1,8 +1,6 @@
 import fnmatch
 import os
 import subprocess
-from os import listdir
-from os.path import isfile, join, getsize
 import time
 import re
 
