@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, url_for, redirect
 
-from ractl_cmds import attach_image, list_devices, is_active
+from ractl_cmds import attach_image, list_devices, is_active, list_files, detach_by_id
 
 app = Flask(__name__)
 
@@ -28,6 +28,17 @@ def attach(scsi_id):
         return redirect(url_for('index'))
     else:
         flash(u'Failed to attach '+ image_location + " to scsi id " + scsi_id + "!", process.stdout+process.stderr)
+        return redirect(url_for('index'))
+
+
+@app.route('/attach/<scsi_id>', methods=['POST'])
+def detach(scsi_id):
+    process = detach_by_id(scsi_id)
+    if process.returncode == 0:
+        flash("Detached scsi id " + scsi_id + "!")
+        return redirect(url_for('index'))
+    else:
+        flash(u"Failed to detach  to scsi id " + scsi_id + "!", process.stdout+process.stderr)
         return redirect(url_for('index'))
 
 
