@@ -6,13 +6,15 @@
 {% else %}
     Service Stopped
 {% endif %}
+<pre>{{active}}</pre>
 <br/>
 Devices:
 <ul>
     {% for device in devices %}
         <li>{{device.id}}, {{device.un}}, {{device.type}}, {{device.file}}</li>
         <li>
-            <form action="/detach/{{device.id}}">
+            <form action="/scsi/detach" method="post">
+                <input type="hidden" name="scsi_id" value="{{device.id}}">
                 <input type="submit" value="Detach" />
             </form>
         </li>
@@ -23,6 +25,22 @@ Files:
 <ul>
     {% for file in files %}
         <li>{{file[0]}} - {{file[1]}}</li>
+        <li>
+            <form action="/scsi/attach" method="post">
+                <input type="hidden" name="file_name" value="{{file[0]}}">
+                <select name="scsi_id" id="cars">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+                <input type="submit" value="Attach" />
+            </form>
+        </li>
     {% endfor %}
 </ul>
 

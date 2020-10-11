@@ -13,32 +13,44 @@ def index():
                            files=list_files())
 
 
-@app.route('/attach/<scsi_id>', methods=['POST'])
-def attach(scsi_id):
-    image_location = request.args.get('image')
-    if image_location.toLower().endsWith('.iso') or image_location.toLower().endsWith('iso'):
+@app.route('/scsi/attach', methods=['POST'])
+def attach():
+    file_name = request.form.get('file_name')
+    scsi_id = request.form.get('scsi_id')
+
+    # Validate image type by suffix
+    if file_name.lower().endswith('.iso') or file_name.lower().endswith('iso'):
         image_type = "cd"
-    elif image_location.toLower().endsWit('.hda'):
+    elif file_name.lower().endswith('.hda'):
         image_type = "hd"
     else:
-        image_type = "unknown"
-    process = attach_image(scsi_id, image_location, image_type)
+        flash(u'Unknown file type. Valid files are .iso, .hda, .cdr', 'error')
+        return redirect(url_for('index'))
+
+    process = attach_image(scsi_id, file_name, image_type)
     if process.returncode == 0:
-        flash('Attached '+ image_location + " to scsi id " + scsi_id + "!")
+        flash('Attached '+ file_name + " to scsi id " + scsi_id + "!")
         return redirect(url_for('index'))
     else:
-        flash(u'Failed to attach '+ image_location + " to scsi id " + scsi_id + "!", process.stdout+process.stderr)
+        flash(u'Failed to attach '+ file_name + " to scsi id " + scsi_id + "!", 'error')
+        print(process.stdout.decode("utf-8"))
+        print(process.stderr.decode("utf-8"))
+        flash(process.stdout.decode("utf-8"), 'stdout')
+        flash(process.stderr.decode("utf-8"), 'stderr')
         return redirect(url_for('index'))
 
 
-@app.route('/detach/<scsi_id>', methods=['POST'])
-def detach(scsi_id):
+@app.route('/scsi/detach', methods=['POST'])
+def detach():
+    scsi_id = request.form.get('scsi_id')
     process = detach_by_id(scsi_id)
     if process.returncode == 0:
         flash("Detached scsi id " + scsi_id + "!")
         return redirect(url_for('index'))
     else:
-        flash(u"Failed to detach  to scsi id " + scsi_id + "!", process.stdout+process.stderr)
+        flash(u"Failed to detach scsi id " + scsi_id + "!", 'error')
+        flash(process.stdout, 'stdout')
+        flash(process.stderr, 'stderr')
         return redirect(url_for('index'))
 
 

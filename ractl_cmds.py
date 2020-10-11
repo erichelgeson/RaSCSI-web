@@ -1,19 +1,27 @@
+import fnmatch
 import os
 import subprocess
 from os import listdir
 from os.path import isfile, join, getsize
 from time import gmtime
+import re
 
 base_dir = "/home/pi/images"  # Default
+valid_file_types = ['*.hda', '*.iso', '*.cdr']
+valid_file_types = r'|'.join([fnmatch.translate(x) for x in valid_file_types])
 
 
 def is_active():
-    return subprocess.run(["systemctl", "is-active", "rascsi"], capture_output=True).stdout.strip() == "Running"
+    process = subprocess.run(["systemctl", "is-active", "rascsi"], capture_output=True)
+    return process.stdout.decode("utf-8").strip() == "active"
 
 
 def list_files():
+
     files_list = []
     for path, dirs, files in os.walk(base_dir):
+        # Only list valid file types
+        files = [f for f in files if re.match(valid_file_types, f)]
         files_list.extend([
             (os.path.join(path, file),
              # TODO: move formatting to template
@@ -22,12 +30,8 @@ def list_files():
     return files_list
 
 
-def attach_image(image, scsi_id, type):
-    # Let RaSCSI try to figure out the type
-    if type == "unknown":
-        return subprocess.run(["rasctl", "-c", "attach", "-i", scsi_id, image], capture_output=True)
-    else:
-        return subprocess.run(["rasctl", "-c", "attach", "-t", type, "-i", scsi_id, image], capture_output=True)
+def attach_image(scsi_id, image, type):
+    return subprocess.run(["rasctl", "-c", "attach", "-t", type, "-i", scsi_id, "-f", image], capture_output=True)
 
 
 def detach_by_id(scsi_id):

@@ -11,8 +11,8 @@ fi
 
 source venv/bin/activate
 
-echo "Checking all requirements are installed"
-pip install -r requirements.txt
+#echo "Checking all requirements are installed"
+#pip install -r requirements.txt
 
 echo "Starting web server..."
 python3 web.py
