@@ -78,7 +78,10 @@ def list_devices():
     output = subprocess.run(["rasctl", "-l"], capture_output=True).stdout.decode("utf-8")
     for line in output.splitlines():
         # Valid line to process, continue
-        if not line.startswith("+") and not line.startswith("| ID |") and len(line) > 0:
+        if not line.startswith("+") and \
+                not line.startswith("| ID |") and \
+                not line.startswith("No device is installed.") \
+                and len(line) > 0:
             line.rstrip()
             device = {}
             segments = line.split("|")
