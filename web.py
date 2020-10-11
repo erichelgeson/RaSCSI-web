@@ -43,6 +43,8 @@ def detach(scsi_id):
 
 
 if __name__ == "__main__":
-    # app.run() # dev?
+    app.secret_key = 'rascsi_is_awesome_insecure_secret_key'
+    app.config['SESSION_TYPE'] = 'filesystem'
+
     from waitress import serve
     serve(app, host="0.0.0.0", port=8080)
