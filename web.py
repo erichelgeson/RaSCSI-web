@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, flash, url_for, redirect
 from werkzeug.utils import secure_filename
 
 from file_cmds import create_new_image, download_file_to_iso
-from pi_cmds import shutdown_pi, reboot_pi
+from pi_cmds import shutdown_pi, reboot_pi, running_version
 from ractl_cmds import attach_image, list_devices, is_active, list_files, detach_by_id, base_dir
 
 app = Flask(__name__)
@@ -18,7 +18,8 @@ def index():
                            active=is_active(),
                            files=list_files(),
                            base_dir=base_dir,
-                           max_file_size=MAX_FILE_SIZE)
+                           max_file_size=MAX_FILE_SIZE,
+                           version=running_version())
 
 
 @app.route('/scsi/attach', methods=['POST'])

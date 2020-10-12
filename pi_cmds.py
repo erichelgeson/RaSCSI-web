@@ -12,3 +12,9 @@ def reboot_pi():
 
 def shutdown_pi():
     return subprocess.run(["sudo", "shutdown", "-h", "now"]).returncode == 0
+
+
+def running_version():
+    ra_web_version = subprocess.run(["git", "rev-parse", "HEAD"]).stdout.decode("utf-8").strip()
+    pi_version = subprocess.run(["uname", "-a"]).stdout.decode("utf-8").strip()
+    return ra_web_version + " " + pi_version
