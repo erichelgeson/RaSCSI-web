@@ -1,24 +1,19 @@
 <!doctype html>
 <title>RaSCSI Control Page</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<style>
-  .error {
-    color: red;
-    }
-  .success {
-    color: green;
-  }
-</style>
+
 <div class="content">
-  <div class="header">
-    {% block header %}{% endblock %}
-  </div>
-  {% for category, message in get_flashed_messages(with_categories=true) %}
-  {% if category == "stdout" or category == "stderr" %}
-    <pre>{{message}}</pre>
-  {% else %}
-    <div class="{{category}}">{{ message }}</div>
-  {% endif %}
-  {% endfor %}
-  {% block content %}{% endblock %}
+    <div class="header">
+        {% block header %}{% endblock %}
+    </div>
+    <div class="flash">
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+        {% if category == "stdout" or category == "stderr" %}
+        <pre>{{message}}</pre>
+        {% else %}
+        <div class="{{category}}">{{ message }}</div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% block content %}{% endblock %}
 </div>

@@ -26,3 +26,14 @@ table, tr, td {
   border-collapse:collapse;
   margin: none;
 }
+
+.error {
+  color: white;
+  font-size:20px;
+  background-color:red;
+}
+.success {
+  color: white;
+  font-size:20px;
+  background-color:green;
+}
