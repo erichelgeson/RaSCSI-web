@@ -1,9 +1,9 @@
 import os
 
-from flask import Flask, render_template, request, flash, url_for, redirect
+from flask import Flask, render_template, request, flash, url_for, redirect, send_file
 from werkzeug.utils import secure_filename
 
-from file_cmds import create_new_image, download_file_to_iso
+from file_cmds import create_new_image, download_file_to_iso, delete_image
 from pi_cmds import shutdown_pi, reboot_pi, running_version
 from ractl_cmds import attach_image, list_devices, is_active, list_files, detach_by_id
 
@@ -118,6 +118,23 @@ def create_file():
         flash(u"Failed to create file", 'error')
         flash(process.stdout, 'stdout')
         flash(process.stderr, 'stderr')
+        return redirect(url_for('index'))
+
+
+@app.route('/files/download/<image>', methods=['GET'])
+def download(image):
+    return send_file(base_dir + "/" + image, as_attachment=True)
+
+
+@app.route('/files/delete', methods=['POST'])
+def delete():
+    image = request.form.get('image')
+
+    if delete_image(image):
+        flash("File " + image + " deleted")
+        return redirect(url_for('index'))
+    else:
+        flash(u"Failed to Delete " + image, 'error')
         return redirect(url_for('index'))
 
 

@@ -32,7 +32,8 @@ table, tr, td {
   font-size:20px;
   background-color:red;
 }
-.success {
+
+.message {
   color: white;
   font-size:20px;
   background-color:green;
