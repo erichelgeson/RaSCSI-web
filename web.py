@@ -3,8 +3,9 @@ import os
 from flask import Flask, render_template, request, flash, url_for, redirect
 from werkzeug.utils import secure_filename
 
-from ractl_cmds import attach_image, list_devices, is_active, list_files, detach_by_id, reboot_pi, shutdown_pi, \
-    download_file_to_iso, base_dir
+from file_cmds import create_new_image, download_file_to_iso
+from pi_cmds import shutdown_pi, reboot_pi
+from ractl_cmds import attach_image, list_devices, is_active, list_files, detach_by_id, base_dir
 
 app = Flask(__name__)
 MAX_FILE_SIZE = 1024 * 1024 * 1024 # 1gb
@@ -104,7 +105,18 @@ def upload_file():
 
 @app.route('/files/create', methods=['POST'])
 def create_file():
-    print("TODO")
+    file_name = request.form.get('file_name')
+    size = request.form.get('size')
+
+    process = create_new_image(file_name, size)
+    if process.returncode == 0:
+        flash("File Downloaded")
+        return redirect(url_for('index'))
+    else:
+        flash(u"Failed to create file", 'error')
+        flash(process.stdout, 'stdout')
+        flash(process.stderr, 'stderr')
+        return redirect(url_for('index'))
 
 
 if __name__ == "__main__":
