@@ -3,6 +3,7 @@ import os
 import subprocess
 import time
 
+from create_disk import make_cd
 from ractl_cmds import attach_image
 
 base_dir = "/home/pi/images"  # Default
@@ -42,7 +43,8 @@ def download_file_to_iso(scsi_id, url):
     iso_filename = base_dir + "/" + file_name + ".iso"
 
     urllib.request.urlretrieve(url, tmp_full_path)
-    iso_proc = subprocess.run(["genisoimage", "-hfs", "-o", iso_filename, tmp_full_path], capture_output=True)
-    if iso_proc.returncode != 0:
-        return iso_proc
-    return attach_image(scsi_id, iso_filename, "cd")
+    iso_filename = make_cd(tmp_full_path, None, None)
+    # iso_proc = subprocess.run(["genisoimage", "-hfs", "-o", iso_filename, tmp_full_path], capture_output=True)
+    # if iso_proc.returncode != 0:
+    #     return iso_proc
+    return attach_image(scsi_id, iso_filename, "hd")
