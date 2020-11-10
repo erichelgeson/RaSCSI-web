@@ -56,3 +56,11 @@ def download_file_to_iso(scsi_id, url):
     if iso_proc.returncode != 0:
         return iso_proc
     return attach_image(scsi_id, iso_filename, "hd")
+
+
+def download_image(url):
+    import urllib.request
+    file_name = url.split('/')[-1]
+    full_path = base_dir + "/" + file_name
+
+    urllib.request.urlretrieve(url, full_path)
