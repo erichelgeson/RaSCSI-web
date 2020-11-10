@@ -23,22 +23,18 @@ def create_new_image(file_name, size):
 
 def delete_image(file_name):
     full_path = base_dir + "/" + file_name
-    print(full_path)
     if os.path.exists(full_path):
-        print("exists")
         os.remove(full_path)
-        print("removes")
         return True
     else:
         return False
 
 
 def unzip_file(file_name):
-    if os.path.exists(base_dir + "/" + file_name):
-        return subprocess.run(["unzip", file_name], cwd = base_dir, timeout = None) == 0
-    else:
-        return False
-
+    import zipfile
+    with zipfile.ZipFile(base_dir + "/" + file_name, 'r') as zip_ref:
+        zip_ref.extractall(base_dir)
+        return True
 
 def rascsi_service(action):
     # start/stop/restart

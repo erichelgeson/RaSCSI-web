@@ -55,10 +55,10 @@
         </tr>
         {% for file in files %}
         <tr>
-            <td>{{file[0].split("/")[-1]}}</td>
+            <td>{{file[0].replace('/home/pi/images/', '')}}</td>
             <td style="text-align:center">
                 {{file[1]}}
-                <a href="/files/download/{{file[0].split("/")[-1]}}"><b>&mapstodown;</b></a>
+                <a href="/files/download/{{file[0].replace('/home/pi/images/', '')}}"><b>&mapstodown;</b></a>
             </td>
             <td>
                 <form action="/scsi/attach" method="post">
@@ -76,12 +76,12 @@
                     <input type="submit" value="Attach" />
                 </form>
                 <form action="/files/delete" method="post">
-                    <input type="hidden" name="image" value="{{file[0].split("/")[-1]}}">
+                    <input type="hidden" name="image" value="{{file[0].replace('/home/pi/images/', '')}}">
                     <input type="submit" value="Delete" />
                 </form>
-                {% if active %}
+                {% if file[0].endswith('.zip') %}
                 <form action="/files/unzip" method="post">
-                    <input type="hidden" name="image" value="{{file[0].split("/")[-1]}}">
+                    <input type="hidden" name="image" value="{{file[0].replace('/home/pi/images/', '')}}">
                     <input type="submit" value="Unzip" />
                 </form>
                 {% endif %}
