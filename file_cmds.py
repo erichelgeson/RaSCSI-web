@@ -15,7 +15,7 @@ def create_new_image(file_name, size):
     if file_name == "":
         file_name = "new_file." + str(int(time.time())) + ".hda"
 
-    return subprocess.run(["dd", "if=/dev/zero", "of=" + base_dir + file_name, "bs=1M", "count=" + size],
+    return subprocess.run(["dd", "if=/dev/zero", "of=" + base_dir + "/" + file_name, "bs=1M", "count=" + size],
                           capture_output=True)
 
 
