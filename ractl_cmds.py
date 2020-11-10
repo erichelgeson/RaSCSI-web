@@ -63,9 +63,10 @@ def list_devices():
             line.rstrip()
             device = {}
             segments = line.split("|")
-            device['id'] = segments[1].strip()
-            device['un'] = segments[2].strip()
-            device['type'] = segments[3].strip()
-            device['file'] = segments[4].strip()
-            device_list.append(device)
+            if len(segments) > 4:
+                device['id'] = segments[1].strip()
+                device['un'] = segments[2].strip()
+                device['type'] = segments[3].strip()
+                device['file'] = segments[4].strip()
+                device_list.append(device)
     return device_list
