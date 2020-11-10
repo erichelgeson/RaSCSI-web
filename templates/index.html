@@ -101,7 +101,7 @@
                         <option value="6">6</option>
                         <option value="7">7</option>
                     </select>
-                    <input type="text" name="url" />
+                    <input type="text" placeholder="URL" name="url" />
                     <input type="submit" value="Download and Mount ISO" />
                 </form>
             </td>
@@ -121,13 +121,13 @@
         </tr>
     </table>
 
-<h2>Create File</h2>
+    <h2>Create File</h2>
     <table style="border: none">
             <tr style="border: none">
                 <td style="border: none; vertical-align:top;">
                 <form action="/files/create" method="post">
-                    <input type="text" name="file_name"/>
-                    <input type="number" name="size"/>
+                    <input type="text" placeholder="File name" name="file_name"/>
+                    <input type="number" placeholder="Size(MB)" name="size"/>
                     <input type="submit" value="Create" />
                 </form>
             </td>
