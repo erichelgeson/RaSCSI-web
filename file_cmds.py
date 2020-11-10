@@ -14,6 +14,8 @@ valid_file_types = r'|'.join([fnmatch.translate(x) for x in valid_file_types])
 def create_new_image(file_name, size):
     if file_name == "":
         file_name = "new_file." + str(int(time.time())) + ".hda"
+    if not file_name.endswith(".hda"):
+        file_name = file_name + ".hda"
 
     return subprocess.run(["dd", "if=/dev/zero", "of=" + base_dir + "/" + file_name, "bs=1M", "count=" + size],
                           capture_output=True)
