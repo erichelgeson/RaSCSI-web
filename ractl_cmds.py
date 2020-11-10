@@ -4,7 +4,7 @@ import subprocess
 import re
 
 base_dir = "/home/pi/images"  # Default
-valid_file_types = ['*.hda', '*.iso', '*.cdr']
+valid_file_types = ['*.hda', '*.iso', '*.cdr', '*.zip']
 valid_file_types = r'|'.join([fnmatch.translate(x) for x in valid_file_types])
 
 

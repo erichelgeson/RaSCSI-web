@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, request, flash, url_for, redirect, send_file
 from werkzeug.utils import secure_filename
 
-from file_cmds import create_new_image, download_file_to_iso, delete_image
+from file_cmds import create_new_image, download_file_to_iso, delete_image, unzip_file
 from pi_cmds import shutdown_pi, reboot_pi, running_version
 from ractl_cmds import attach_image, list_devices, is_active, list_files, detach_by_id
 
@@ -129,12 +129,24 @@ def download(image):
 @app.route('/files/delete', methods=['POST'])
 def delete():
     image = request.form.get('image')
-
+    print('image: ' + image)
     if delete_image(image):
         flash("File " + image + " deleted")
         return redirect(url_for('index'))
     else:
         flash(u"Failed to Delete " + image, 'error')
+        return redirect(url_for('index'))
+
+
+@app.route('/files/unzip', methods=['POST'])
+def unzip():
+    image = request.form.get('image')
+
+    if unzip_file(image):
+        flash("Unzipped file " + image)
+        return redirect(url_for('index'))
+    else:
+        flash(u"Failed to unzip " + image, 'error')
         return redirect(url_for('index'))
 
 

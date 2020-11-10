@@ -79,6 +79,12 @@
                     <input type="hidden" name="image" value="{{file[0].split("/")[-1]}}">
                     <input type="submit" value="Delete" />
                 </form>
+                {% if active %}
+                <form action="/files/unzip" method="post">
+                    <input type="hidden" name="image" value="{{file[0].split("/")[-1]}}">
+                    <input type="submit" value="Unzip" />
+                </form>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

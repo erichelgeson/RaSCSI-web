@@ -2,20 +2,31 @@
 set -e
 
 # verify packages installed
+ERROR=0
 if ! command -v genisoimage &> /dev/null ; then
     echo "genisoimage could not be found"
     echo "Run 'sudo apt install genisoimage' to fix."
-    exit 1
+    ERROR=1
 fi
 if ! command -v python3 &> /dev/null ; then
     echo "python3 could not be found"
     echo "Run 'sudo apt install python3' to fix."
-    exit 1
+    ERROR=1
 fi
 if ! python3 -m venv --help &> /dev/null ; then
     echo "venv could not be found"
     echo "Run 'sudo apt install python3-venv' to fix."
-    exit 1
+    ERROR=1
+fi
+if ! command -v unzip &> /dev/null ; then
+    echo "unzip could not be found"
+    echo "Run 'sudo apt install unzip' to fix."
+    ERROR=1
+fi
+if [ $ERROR = 1 ] ; then
+  echo
+  echo "Fix errors and re-run ./start.sh"
+  exit 1
 fi
 
 if ! test -e venv; then
