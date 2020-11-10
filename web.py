@@ -8,7 +8,7 @@ from pi_cmds import shutdown_pi, reboot_pi, running_version
 from ractl_cmds import attach_image, list_devices, is_active, list_files, detach_by_id
 
 app = Flask(__name__)
-MAX_FILE_SIZE = 1024 * 1024 * 1024 # 1gb
+MAX_FILE_SIZE = 1024 * 1024 * 1024 * 2 # 2gb
 base_dir = "/home/pi/images"  # Default
 
 
