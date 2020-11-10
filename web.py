@@ -112,7 +112,7 @@ def create_file():
 
     process = create_new_image(file_name, size)
     if process.returncode == 0:
-        flash("File Downloaded")
+        flash("Drive created")
         return redirect(url_for('index'))
     else:
         flash(u"Failed to create file", 'error')
