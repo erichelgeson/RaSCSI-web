@@ -1,6 +1,6 @@
 from machfs import Volume, Folder, File
 
-base_dir = "/home/pi/images"  # Default
+base_dir = "/home/pi/images/"  # Default
 
 
 # Build a cd and attempt to fix resource forks if known
@@ -32,7 +32,7 @@ def make_cd(file_path, file_type, file_creator):
     print("padding " + str(padding))
     print("len " + str(len(file_bytes)))
     print("total " + str(len(file_bytes) + padding))
-    with open(base_dir + "/" + 'test.hda', 'wb') as f:
+    with open(base_dir + 'test.hda', 'wb') as f:
         flat = v.write(
             size=len(file_bytes) + padding,
             align=512,  # Allocation block alignment modulus (2048 for CDs)
@@ -42,4 +42,4 @@ def make_cd(file_path, file_type, file_creator):
         )
         f.write(flat)
 
-    return base_dir + "/" + 'test.hda'
+    return base_dir + 'test.hda'

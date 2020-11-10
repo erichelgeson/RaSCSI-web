@@ -9,7 +9,7 @@ from ractl_cmds import attach_image, list_devices, is_active, list_files, detach
 
 app = Flask(__name__)
 MAX_FILE_SIZE = 1024 * 1024 * 1024 * 2 # 2gb
-base_dir = "/home/pi/images"  # Default
+base_dir = "/home/pi/images/"  # Default
 
 
 @app.route('/')
@@ -78,7 +78,7 @@ def shutdown():
     return redirect(url_for('index'))
 
 
-@app.route('/files/download', methods=['POST'])
+@app.route('/files/download_to_iso', methods=['POST'])
 def download_file():
     scsi_id = request.form.get('scsi_id')
     url = request.form.get('url')
@@ -130,9 +130,10 @@ def create_file():
         return redirect(url_for('index'))
 
 
-@app.route('/files/download/<image>', methods=['GET'])
-def download(image):
-    return send_file(base_dir + "/" + image, as_attachment=True)
+@app.route('/files/download', methods=['POST'])
+def download():
+    image = request.form.get('image')
+    return send_file(base_dir + image, as_attachment=True)
 
 
 @app.route('/files/delete', methods=['POST'])

@@ -55,10 +55,13 @@
         </tr>
         {% for file in files %}
         <tr>
-            <td>{{file[0].replace('/home/pi/images/', '')}}</td>
+            <td>{{file[0].replace(base_dir, '')}}</td>
             <td style="text-align:center">
                 {{file[1]}}
-                <a href="/files/download/{{file[0].replace('/home/pi/images/', '')}}"><b>&mapstodown;</b></a>
+                <form action="/files/download" method="post">
+                    <input type="hidden" name="image" value="{{file[0].replace(base_dir, '')}}">
+                    <input type="submit" value="&mapstodown;" />
+                </form>
             </td>
             <td>
                 <form action="/scsi/attach" method="post">
@@ -76,12 +79,12 @@
                     <input type="submit" value="Attach" />
                 </form>
                 <form action="/files/delete" method="post">
-                    <input type="hidden" name="image" value="{{file[0].replace('/home/pi/images/', '')}}">
+                    <input type="hidden" name="image" value="{{file[0].replace(base_dir, '')}}">
                     <input type="submit" value="Delete" />
                 </form>
                 {% if file[0].endswith('.zip') %}
                 <form action="/files/unzip" method="post">
-                    <input type="hidden" name="image" value="{{file[0].replace('/home/pi/images/', '')}}">
+                    <input type="hidden" name="image" value="{{file[0].replace(base_dir, '')}}">
                     <input type="submit" value="Unzip" />
                 </form>
                 {% endif %}
@@ -109,7 +112,7 @@
     <table style="border: none">
             <tr style="border: none">
                 <td style="border: none; vertical-align:top;">
-                <form action="/files/download" method="post">
+                <form action="/files/download_to_iso" method="post">
                     <select name="scsi_id">
                         <option value="0">0</option>
                         <option value="1">1</option>
