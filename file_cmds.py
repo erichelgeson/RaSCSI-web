@@ -55,7 +55,7 @@ def download_file_to_iso(scsi_id, url):
     iso_proc = subprocess.run(["genisoimage", "-hfs", "-o", iso_filename, tmp_full_path], capture_output=True)
     if iso_proc.returncode != 0:
         return iso_proc
-    return attach_image(scsi_id, iso_filename, "hd")
+    return attach_image(scsi_id, iso_filename, "cd")
 
 
 def download_image(url):
