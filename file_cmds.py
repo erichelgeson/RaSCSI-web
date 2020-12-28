@@ -45,7 +45,7 @@ def download_file_to_iso(scsi_id, url):
     import urllib.request
     file_name = url.split('/')[-1]
     tmp_ts = int(time.time())
-    tmp_dir = "/tmp/" + str(tmp_ts)
+    tmp_dir = "/tmp/" + str(tmp_ts) + "/"
     os.mkdir(tmp_dir)
     tmp_full_path = tmp_dir + file_name
     iso_filename = base_dir + file_name + ".iso"
