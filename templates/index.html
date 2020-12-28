@@ -24,10 +24,10 @@
     <table cellpadding="3" border="black">
         <tbody>
         <tr>
-            <td><b>SCSI ID</b></td>
+            <td><b>ID</b></td>
             <td><b>Type</b></td>
             <td><b>File</b></td>
-            <td><b>Device Ops</b></td>
+            <td><b>Action</b></td>
         </tr>
         {% for device in devices %}
         <tr>
@@ -64,10 +64,9 @@
         <tr>
             <td>{{file[0].replace(base_dir, '')}}</td>
             <td style="text-align:center">
-                {{file[1]}}
                 <form action="/files/download" method="post">
                     <input type="hidden" name="image" value="{{file[0].replace(base_dir, '')}}">
-                    <input type="submit" value="&#8595;" />
+                    <input type="submit" value="{{file[1]}} &#8595;" />
                 </form>
             </td>
             <td>
@@ -84,7 +83,7 @@
                     <input type="hidden" name="image" value="{{file[0].replace(base_dir, '')}}">
                     <input type="submit" value="Delete" />
                 </form>
-                {% if file[0].endswith('.zip') %}
+                {% if file[0].endswith('.zip') or file[0].endswith('.ZIP') %}
                 <form action="/files/unzip" method="post">
                     <input type="hidden" name="image" value="{{file[0].replace(base_dir, '')}}">
                     <input type="submit" value="Unzip" />
@@ -96,12 +95,15 @@
         </tbody>
     </table>
 
-    <h2>Download to {{base_dir}}</h2>
-    <p>Download a file to images dir</p>
+    <hr/>
+
+    <h2>Download File</h2>
+    <p>Given a URL, download that file to the <tt>{{base_dir}}</tt></p>
     <table style="border: none">
             <tr style="border: none">
                 <td style="border: none; vertical-align:top;">
                 <form action="/files/download_image" method="post">
+                    <label for="url">URL:</label>
                     <input type="text" placeholder="URL" name="url" />
                     <input type="submit" value="Download" />
                 </form>
@@ -109,17 +111,21 @@
         </tr>
     </table>
 
-    <h2>Download to CD</h2>
-    <p>Download a file, create a HFS iso, and mount it on the device id given</p>
+    <hr/>
+
+    <h2>Download and create HFS CD</h2>
+    <p>Given a URL this will download a file, create a HFS iso, and mount it on the device id given.</p>
     <table style="border: none">
             <tr style="border: none">
                 <td style="border: none; vertical-align:top;">
+                <label for="scsi_id">SCSI ID:</label>
                 <form action="/files/download_to_iso" method="post">
                     <select name="scsi_id">
                         {% for id in scsi_ids %}
                         <option value="{{id}}">{{id}}</option>
                         {% endfor %}
                     </select>
+                    <label for="url">URL:</label>
                     <input type="text" placeholder="URL" name="url" />
                     <input type="submit" value="Download and Mount ISO" />
                 </form>
@@ -127,12 +133,15 @@
         </tr>
     </table>
 
+    <hr/>
+
     <h2>Upload File</h2>
-    <p>Uploads file to {{base_dir}} - max file size set at {{max_file_size / 1024 /1024 }}MB</p>
+    <p>Uploads file to <tt>{{base_dir}}</tt>. Max file size is set to {{max_file_size / 1024 /1024 }}MB</p>
     <table style="border: none">
             <tr style="border: none">
                 <td style="border: none; vertical-align:top;">
                 <form action="/files/upload" method="post" enctype="multipart/form-data">
+                    <label for="file">File:</label>
                     <input type="file" name="file"/>
                     <input type="submit" value="Upload" />
                 </form>
@@ -140,12 +149,15 @@
         </tr>
     </table>
 
-    <h2>Create File</h2>
+    <hr/>
+    <h2>Create Image File</h2>
     <table style="border: none">
             <tr style="border: none">
                 <td style="border: none; vertical-align:top;">
                 <form action="/files/create" method="post">
+                    <label for="file_name">File Name:</label>
                     <input type="text" placeholder="File name" name="file_name"/>
+                    <label for="size">Size(MB):</label>
                     <input type="number" placeholder="Size(MB)" name="size"/>
                     <input type="submit" value="Create" />
                 </form>
@@ -153,6 +165,7 @@
         </tr>
     </table>
 
+    <hr/>
 
     <h2>Raspberry Pi Operations</h2>
     <table style="border: none">
@@ -172,5 +185,5 @@
 {% endblock %}
 
 {% block footer %}
-    <center><pre>{{version}}</pre></center>
+    <center><tt>{{version}}</tt></center>
 {% endblock %}
