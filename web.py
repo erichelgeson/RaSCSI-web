@@ -96,7 +96,7 @@ def eject():
         return redirect(url_for('index'))
 
 
-@app.route('/pi/restart', methods=['POST'])
+@app.route('/pi/reboot', methods=['POST'])
 def restart():
     reboot_pi()
     flash("Restarting...")
