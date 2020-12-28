@@ -9,18 +9,35 @@ from ractl_cmds import attach_image, list_devices, is_active, list_files, detach
 
 app = Flask(__name__)
 MAX_FILE_SIZE = 1024 * 1024 * 1024 * 2 # 2gb
+# List of SCSI ID's you'd like to exclude - eg if you are on a Mac, the System is usually 7
+EXCLUDE_SCSI_IDS = [7]
 base_dir = "/home/pi/images/"  # Default
 
 
 @app.route('/')
 def index():
+    devices = list_devices()
+    scsi_ids = get_valid_scsi_ids(devices)
     return render_template('index.html',
-                           devices=list_devices(),
+                           devices=devices,
                            active=is_active(),
                            files=list_files(),
                            base_dir=base_dir,
+                           scsi_ids=scsi_ids,
                            max_file_size=MAX_FILE_SIZE,
                            version=running_version())
+
+
+def get_valid_scsi_ids(devices):
+    invalid_list = EXCLUDE_SCSI_IDS.copy()
+    for device in devices:
+        invalid_list.append(int(device['id']))
+
+    valid_list = list(range(8))
+    for id in invalid_list:
+        valid_list.remove(id)
+    valid_list.reverse()
+    return valid_list
 
 
 @app.route('/scsi/attach', methods=['POST'])
@@ -165,6 +182,8 @@ if __name__ == "__main__":
     app.config['UPLOAD_FOLDER'] = base_dir
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
+     # A list of SCSI ID's you'd like to exclude
+    app.config['EXCLUDE_SCSI_IDS'] = EXCLUDE_SCSI_IDS
 
     from waitress import serve
     serve(app, host="0.0.0.0", port=8080)

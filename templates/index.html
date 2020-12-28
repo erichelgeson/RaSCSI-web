@@ -67,14 +67,9 @@
                 <form action="/scsi/attach" method="post">
                     <input type="hidden" name="file_name" value="{{file[0]}}">
                     <select name="scsi_id">
-                        <option value="0">0</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
+                        {% for id in scsi_ids %}
+                        <option value="{{id}}">{{id}}</option>
+                        {% endfor %}
                     </select>
                     <input type="submit" value="Attach" />
                 </form>
@@ -114,14 +109,9 @@
                 <td style="border: none; vertical-align:top;">
                 <form action="/files/download_to_iso" method="post">
                     <select name="scsi_id">
-                        <option value="0">0</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
+                        {% for id in scsi_ids %}
+                        <option value="{{id}}">{{id}}</option>
+                        {% endfor %}
                     </select>
                     <input type="text" placeholder="URL" name="url" />
                     <input type="submit" value="Download and Mount ISO" />
