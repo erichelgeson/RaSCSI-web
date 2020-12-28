@@ -35,10 +35,17 @@
             <td style="text-align:center">{{device.type}}</td>
             <td>{{device.file}}</td>
             <td>
+                {% if device.type == "SCCD" and device.file != "NO MEDIA" %}
+                <form action="/scsi/eject" method="post">
+                    <input type="hidden" name="scsi_id" value="{{device.id}}">
+                    <input type="submit" value="Eject" />
+                </form>
+                {% else %}
                 <form action="/scsi/detach" method="post">
                     <input type="hidden" name="scsi_id" value="{{device.id}}">
                     <input type="submit" value="Detach" />
                 </form>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
@@ -60,7 +67,7 @@
                 {{file[1]}}
                 <form action="/files/download" method="post">
                     <input type="hidden" name="image" value="{{file[0].replace(base_dir, '')}}">
-                    <input type="submit" value="&mapstodown;" />
+                    <input type="submit" value="&#8595;" />
                 </form>
             </td>
             <td>

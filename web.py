@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 
 from file_cmds import create_new_image, download_file_to_iso, delete_image, unzip_file, download_image
 from pi_cmds import shutdown_pi, reboot_pi, running_version
-from ractl_cmds import attach_image, list_devices, is_active, list_files, detach_by_id
+from ractl_cmds import attach_image, list_devices, is_active, list_files, detach_by_id, eject_by_id
 
 app = Flask(__name__)
 MAX_FILE_SIZE = 1024 * 1024 * 1024 * 2 # 2gb
@@ -31,7 +31,8 @@ def index():
 def get_valid_scsi_ids(devices):
     invalid_list = EXCLUDE_SCSI_IDS.copy()
     for device in devices:
-        invalid_list.append(int(device['id']))
+        if device['file'] != "NO MEDIA":
+            invalid_list.append(int(device['id']))
 
     valid_list = list(range(8))
     for id in invalid_list:
@@ -76,6 +77,20 @@ def detach():
         return redirect(url_for('index'))
     else:
         flash(u"Failed to detach scsi id " + scsi_id + "!", 'error')
+        flash(process.stdout, 'stdout')
+        flash(process.stderr, 'stderr')
+        return redirect(url_for('index'))
+
+
+@app.route('/scsi/eject', methods=['POST'])
+def eject():
+    scsi_id = request.form.get('scsi_id')
+    process = eject_by_id(scsi_id)
+    if process.returncode == 0:
+        flash("Ejected scsi id " + scsi_id + "!")
+        return redirect(url_for('index'))
+    else:
+        flash(u"Failed to eject scsi id " + scsi_id + "!", 'error')
         flash(process.stdout, 'stdout')
         flash(process.stderr, 'stderr')
         return redirect(url_for('index'))
