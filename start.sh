@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
+# set -x # Uncomment to Debug
 
+cd $(dirname $0)
 # verify packages installed
 ERROR=0
 if ! command -v genisoimage &> /dev/null ; then
